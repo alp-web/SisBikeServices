@@ -7,6 +7,15 @@ function requestDelivery() {
   const tip = Number(document.getElementById("Tip").value);
   const promo = document.getElementById("Discount").value;
 
+const weightInput = document.getElementById("weight").value;
+const weight = Number(weightInput);
+
+if (!Number.isInteger(weight) || weight <= 0) {
+  alert("Please enter a valid whole number for weight");
+  return;
+}
+  
+
   if (!pickup || !dropoff) {
     alert("Enter locations");
     return;
