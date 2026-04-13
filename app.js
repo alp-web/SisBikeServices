@@ -3,16 +3,27 @@ let requests = [];
 function requestDelivery() {
   const pickup = document.getElementById("pickup").value;
   const dropoff = document.getElementById("dropoff").value;
+  const weight = Number(document.getElementById("weight").value);
+  const tip = Number(document.getElementById("Tip").value);
+  const promo = document.getElementById("Discount").value;
 
   if (!pickup || !dropoff) {
-    alert("Enter both locations");
+    alert("Enter locations");
     return;
   }
 
+  const distance = getFakeDistance();
+  const price = calculatePrice(distance, weight, tip, promo);
+
+  document.getElementById("priceDisplay").innerText =
+    "Estimated Price: " + price + " Birr";
+
   const request = {
     id: Date.now(),
-    pickup: pickup,
-    dropoff: dropoff,
+    pickup,
+    dropoff,
+    weight,
+    price,
     status: "Pending"
   };
 
@@ -28,11 +39,13 @@ function displayRequests() {
     const li = document.createElement("li");
 
     li.innerHTML = `
-      ${req.pickup} → ${req.dropoff} <br>
-      Status: ${req.status}
-      <br>
-      <button onclick="acceptDelivery(${req.id})">Accept</button>
-    `;
+  ${req.pickup} → ${req.dropoff} <br>
+  Weight: ${req.weight} kg <br>
+  Price: ${req.price} Birr <br>
+  Status: ${req.status}
+  <br>
+  <button onclick="acceptDelivery(${req.id})">Accept</button>
+`;
 
     list.appendChild(li);
   });
@@ -44,4 +57,25 @@ function acceptDelivery(id) {
     request.status = "In Progress";
     displayRequests();
   }
+}
+
+function calculatePrice(distanceKM, weight, tip, promo) {
+  let base = 50;
+  let distanceCost = distanceKM * 10;
+  let weightCost = weight * 5;
+
+  let total = base + distanceCost + weightCost;
+
+  // Apply promo
+  if (promo === "SAVE10") {
+    total *= 0.9;
+  }
+
+  total += Number(tip || 0);
+
+  return Math.round(total);
+}
+
+function getFakeDistance() {
+  return Math.floor(Math.random() * 10) + 1; // 1–10 KM
 }
