@@ -4,51 +4,56 @@
   <title>Sis Bike Delivery</title>
   <link rel="stylesheet" href="style.css">
 </head>
-  
-<!-- Map -->
-<div id="map"></div>
-
-<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAdxzIx6p5vrkaMyQPEV5-NafiB162revs=places"></script>
-
-<script>
-  let map;
-
-  function initMap() {
-    map = new google.maps.Map(document.getElementById("map"), {
-      center: { lat: 9.03, lng: 38.74 },
-      zoom: 12
-    });
-  }
-
-  window.onload = initMap;
-</script>
-
 
 <body>
 
-  <div class="container">
+<div class="container">
 
   <h1>🚴 Sis Delivery Service</h1>
-  <h1> ሲስ የዴሊቨሪ አገልግሎት</h1>
+  <h1>ሲስ የዴሊቨሪ አገልግሎት</h1>
+
+  <!-- Map -->
+  <div id="map"></div>
 
   <div class="form">
     <input type="text" id="pickup" placeholder="Pickup Location (መነሻ ቦታ)">
     <input type="text" id="dropoff" placeholder="Drop-off Location (መድረሻ ቦታ)">
-    <input type="number"  id="distance"  placeholder="Distance (KM) / ርቀት (ኪሜ)"  min="1"  step="1" /> 
+
+    <input type="number" id="distance" placeholder="Distance (KM)" min="1" step="1">
     <p id="distanceInfo">Distance: Not calculated</p>
-    <input type="number" id="weight" placeholder="Item Weight (የአቃው ክብደት ግምት) (kg)" min="1" step="1" oninput="this.value = this.value.replace(/[^0-9]/g, '')"/>
+
+    <input type="number" id="weight" placeholder="Item Weight (kg)" min="1" step="1">
+
     <p id="priceDisplay">Estimated Price: 0 Birr</p>
-    <input type="text" id="Tip" placeholder="Tip for Driver (ለሹፌር ቲፕ)">
-    <input type="text" id="Discount" placeholder="Promo Code (የቅናሽ ኮድ)">
+
+    <input type="number" id="Tip" placeholder="Tip">
+    <input type="text" id="Discount" placeholder="Promo Code">
+
     <button onclick="requestDelivery()">Request Delivery</button>
   </div>
 
-  <h2> ደሊቨሪ ይዘዙ (Delivery Requests)</h2>
+  <h2>ደሊቨሪ ይዘዙ (Delivery Requests)</h2>
   <ul id="requestsList"></ul>
 
 </div>
 
+<!-- ✅ CORRECT SCRIPT -->
+<script src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&libraries=places"></script>
+
+<script>
+let map;
+
+function initMap() {
+  map = new google.maps.Map(document.getElementById("map"), {
+    center: { lat: 9.03, lng: 38.74 },
+    zoom: 12
+  });
+}
+
+window.onload = initMap;
+</script>
 
 <script src="app.js"></script>
+
 </body>
 </html>
