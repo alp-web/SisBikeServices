@@ -9,7 +9,7 @@
   
   <div id="map"></div>
 
-<script src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&libraries=places"></script>
+  <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyXXXXXXX&libraries=places"></script>
 <script>
   let map;
 
@@ -34,7 +34,7 @@
   <div class="form">
     <input type="text" id="pickup" placeholder="Pickup Location (መነሻ ቦታ)">
     <input type="text" id="dropoff" placeholder="Drop-off Location (መድረሻ ቦታ)">
-    <input type="text" id="weight" placeholder="Item Weight (የአቃው ክብደት ግምት)">
+    <input type="number" id="weight" placeholder="Item Weight (የአቃው ክብደት ግምት) (kg)" min="1" step="1" oninput="this.value = this.value.replace(/[^0-9]/g, '')"/>
     <p id="priceDisplay">Estimated Price: 0 Birr</p>
     <input type="text" id="Tip" placeholder="Tip for Driver (ለሹፌር ቲፕ)">
     <input type="text" id="Discount" placeholder="Promo Code (የቅናሽ ኮድ)">
