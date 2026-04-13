@@ -7,21 +7,12 @@ function requestDelivery() {
   const tip = Number(document.getElementById("Tip").value);
   const promo = document.getElementById("Discount").value;
 
-const weightInput = document.getElementById("weight").value;
-const weight = Number(weightInput);
-
-if (!Number.isInteger(weight) || weight <= 0) {
-  alert("Please enter a valid whole number for weight");
-  return;
-}
-  
-
   if (!pickup || !dropoff) {
     alert("Enter locations");
     return;
   }
 
-  const distance = getFakeDistance();
+  const distance = getDistance();
   const price = calculatePrice(distance, weight, tip, promo);
 
   document.getElementById("priceDisplay").innerText =
@@ -32,6 +23,7 @@ if (!Number.isInteger(weight) || weight <= 0) {
     pickup,
     dropoff,
     weight,
+    distance,
     price,
     status: "Pending"
   };
@@ -49,6 +41,7 @@ function displayRequests() {
 
     li.innerHTML = `
   ${req.pickup} → ${req.dropoff} <br>
+  Distance: ${req.distance} KM <br>
   Weight: ${req.weight} kg <br>
   Price: ${req.price} Birr <br>
   Status: ${req.status}
@@ -85,6 +78,21 @@ function calculatePrice(distanceKM, weight, tip, promo) {
   return Math.round(total);
 }
 
-function getFakeDistance() {
-  return Math.floor(Math.random() * 10) + 1; // 1–10 KM
+function getDistance() {
+  const manualDistance = Number(document.getElementById("distance").value);
+
+  // If user entered distance → use it
+  if (manualDistance && manualDistance > 0) {
+    document.getElementById("distanceInfo").innerText =
+      "Distance (Manual): " + manualDistance + " KM";
+    return manualDistance;
+  }
+
+  // Otherwise fallback to fake/map
+  const autoDistance = getFakeDistance();
+
+  document.getElementById("distanceInfo").innerText =
+    "Distance (Estimated): " + autoDistance + " KM";
+
+  return autoDistance;
 }
