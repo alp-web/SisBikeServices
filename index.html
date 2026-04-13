@@ -6,16 +6,23 @@
 </head>
 <body>
 
-<h1>🚴 Sis Bike Delivery</h1>
+  <div class="container">
 
-<div class="form">
-  <input type="text" id="pickup" placeholder="Pickup Location">
-  <input type="text" id="dropoff" placeholder="Drop-off Location">
-  <button onclick="requestDelivery()">Request Delivery</button>
+  <h1>🚴 Sis Bike Delivery Service</h1>
+
+  <img src="your-image-url.jpg" alt="Bike Delivery" class="hero">
+
+  <div class="form">
+    <input type="text" id="pickup" placeholder="Pickup Location (موقع الاستلام)">
+    <input type="text" id="dropoff" placeholder="Drop-off Location (موقع التسليم)">
+    <button onclick="requestDelivery()">Request Delivery</button>
+  </div>
+
+  <h2> ደሊቨሪ ይዘዙ (Delivery Requests)</h2>
+  <ul id="requestsList"></ul>
+
 </div>
 
-<h2>طلبات التوصيل (Delivery Requests)</h2>
-<ul id="requestsList"></ul>
 
 <script src="app.js"></script>
 </body>
