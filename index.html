@@ -4,6 +4,26 @@
   <title>Sis Bike Delivery</title>
   <link rel="stylesheet" href="style.css">
 </head>
+  
+<!--Map-->
+  
+  <div id="map"></div>
+
+<script src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&libraries=places"></script>
+<script>
+  let map;
+
+  function initMap() {
+    map = new google.maps.Map(document.getElementById("map"), {
+      center: { lat: 9.03, lng: 38.74 }, // Addis Ababa (change if needed)
+      zoom: 12,
+    });
+  }
+
+  window.onload = initMap;
+</script>
+
+
 <body>
 
   <div class="container">
@@ -15,6 +35,9 @@
     <input type="text" id="pickup" placeholder="Pickup Location (መነሻ ቦታ)">
     <input type="text" id="dropoff" placeholder="Drop-off Location (መድረሻ ቦታ)">
     <input type="text" id="weight" placeholder="Item Weight (የአቃው ክብደት ግምት)">
+    <p id="priceDisplay">Estimated Price: 0 Birr</p>
+    <input type="text" id="Tip" placeholder="Tip for Driver (ለሹፌር ቲፕ)">
+    <input type="text" id="Discount" placeholder="Promo Code (የቅናሽ ኮድ)">
     <button onclick="requestDelivery()">Request Delivery</button>
   </div>
 
