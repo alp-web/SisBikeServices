@@ -3,28 +3,22 @@ let requests = [];
 function requestDelivery() {
   const pickup = document.getElementById("pickup").value;
   const dropoff = document.getElementById("dropoff").value;
+  const distance = Number(document.getElementById("distance").value);
   const weight = Number(document.getElementById("weight").value);
-  const tip = Number(document.getElementById("Tip").value);
-  const promo = document.getElementById("Discount").value;
+  const priceText = document.getElementById("priceDisplay").innerText;
 
-  if (!pickup || !dropoff) {
-    alert("Enter locations");
+  if (!pickup || !dropoff || !distance) {
+    alert("Complete all required fields");
     return;
   }
-
-  const distance = getDistance();
-  const price = calculatePrice(distance, weight, tip, promo);
-
-  document.getElementById("priceDisplay").innerText =
-    "Estimated Price: " + price + " Birr";
 
   const request = {
     id: Date.now(),
     pickup,
     dropoff,
-    weight,
     distance,
-    price,
+    weight,
+    price: priceText,
     status: "Pending"
   };
 
@@ -95,4 +89,65 @@ function getDistance() {
     "Distance (Estimated): " + autoDistance + " KM";
 
   return autoDistance;
+
+
+  function calculateDistanceFromMap(pickup, dropoff) {
+  const service = new google.maps.DirectionsService();
+
+  service.route({
+    origin: pickup,
+    destination: dropoff,
+    travelMode: 'DRIVING'
+  }, function(result, status) {
+
+    if (status === 'OK') {
+      const distanceMeters = result.routes[0].legs[0].distance.value;
+      const distanceKM = (distanceMeters / 1000).toFixed(1);
+
+      // Fill input
+      document.getElementById("distance").value = distanceKM;
+
+      // Show distance
+      document.getElementById("distanceInfo").innerText =
+        "Distance (Map): " + distanceKM + " KM";
+
+      // 🔥 UPDATE PRICE IMMEDIATELY
+      updatePrice();
+
+    } else {
+      console.log("Map error:", status);
+    }
+
+  });
+    function updatePrice() {
+  const distance = Number(document.getElementById("distance").value) || 0;
+  const weight = Number(document.getElementById("weight").value) || 0;
+  const tip = Number(document.getElementById("Tip").value) || 0;
+  const promo = document.getElementById("Discount").value;
+
+  if (distance <= 0) return;
+
+  const price = calculatePrice(distance, weight, tip, promo);
+
+  document.getElementById("priceDisplay").innerText =
+    "Estimated Price: " + price + " Birr";
 }
+    
+}
+}
+
+// Auto calculate distance when locations change
+document.getElementById("dropoff").addEventListener("change", () => {
+  const pickup = document.getElementById("pickup").value;
+  const dropoff = document.getElementById("dropoff").value;
+
+  if (pickup && dropoff) {
+    calculateDistanceFromMap(pickup, dropoff);
+  }
+});
+
+// Live price updates
+document.getElementById("distance").addEventListener("input", updatePrice);
+document.getElementById("weight").addEventListener("input", updatePrice);
+document.getElementById("Tip").addEventListener("input", updatePrice);
+document.getElementById("Discount").addEventListener("input", updatePrice);
