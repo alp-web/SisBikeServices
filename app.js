@@ -11,7 +11,7 @@ function requestDelivery() {
     alert("Complete all required fields");
     return;
   }
-
+document.getElementById("distanceInfo").innerText = "Calculating distance...";
   const request = {
     id: Date.now(),
     pickup,
