@@ -1,5 +1,6 @@
 let requests = [];
 
+// 🚀 MAIN REQUEST FUNCTION
 function requestDelivery() {
   const pickup = document.getElementById("pickup").value;
   const dropoff = document.getElementById("dropoff").value;
@@ -11,7 +12,7 @@ function requestDelivery() {
     alert("Complete all required fields");
     return;
   }
-document.getElementById("distanceInfo").innerText = "Calculating distance...";
+
   const request = {
     id: Date.now(),
     pickup,
@@ -26,6 +27,7 @@ document.getElementById("distanceInfo").innerText = "Calculating distance...";
   displayRequests();
 }
 
+// 📦 DISPLAY REQUESTS
 function displayRequests() {
   const list = document.getElementById("requestsList");
   list.innerHTML = "";
@@ -34,19 +36,20 @@ function displayRequests() {
     const li = document.createElement("li");
 
     li.innerHTML = `
-  ${req.pickup} → ${req.dropoff} <br>
-  Distance: ${req.distance} KM <br>
-  Weight: ${req.weight} kg <br>
-  Price: ${req.price} Birr <br>
-  Status: ${req.status}
-  <br>
-  <button onclick="acceptDelivery(${req.id})">Accept</button>
-`;
+      ${req.pickup} → ${req.dropoff} <br>
+      Distance: ${req.distance} KM <br>
+      Weight: ${req.weight} kg <br>
+      ${req.price} <br>
+      Status: ${req.status}
+      <br>
+      <button onclick="acceptDelivery(${req.id})">Accept</button>
+    `;
 
     list.appendChild(li);
   });
 }
 
+// 🚴 ACCEPT DELIVERY
 function acceptDelivery(id) {
   const request = requests.find(r => r.id === id);
   if (request) {
@@ -55,6 +58,7 @@ function acceptDelivery(id) {
   }
 }
 
+// 💰 PRICE CALCULATION
 function calculatePrice(distanceKM, weight, tip, promo) {
   let base = 50;
   let distanceCost = distanceKM * 10;
@@ -62,7 +66,6 @@ function calculatePrice(distanceKM, weight, tip, promo) {
 
   let total = base + distanceCost + weightCost;
 
-  // Apply promo
   if (promo === "SAVE10") {
     total *= 0.9;
   }
@@ -72,26 +75,10 @@ function calculatePrice(distanceKM, weight, tip, promo) {
   return Math.round(total);
 }
 
-function getDistance() {
-  const manualDistance = Number(document.getElementById("distance").value);
+// 🗺️ CALCULATE DISTANCE FROM MAP
+function calculateDistanceFromMap(pickup, dropoff) {
+  document.getElementById("distanceInfo").innerText = "Calculating distance...";
 
-  // If user entered distance → use it
-  if (manualDistance && manualDistance > 0) {
-    document.getElementById("distanceInfo").innerText =
-      "Distance (Manual): " + manualDistance + " KM";
-    return manualDistance;
-  }
-
-  // Otherwise fallback to fake/map
-  const autoDistance = getFakeDistance();
-
-  document.getElementById("distanceInfo").innerText =
-    "Distance (Estimated): " + autoDistance + " KM";
-
-  return autoDistance;
-
-
-  function calculateDistanceFromMap(pickup, dropoff) {
   const service = new google.maps.DirectionsService();
 
   service.route({
@@ -104,22 +91,23 @@ function getDistance() {
       const distanceMeters = result.routes[0].legs[0].distance.value;
       const distanceKM = (distanceMeters / 1000).toFixed(1);
 
-      // Fill input
       document.getElementById("distance").value = distanceKM;
 
-      // Show distance
       document.getElementById("distanceInfo").innerText =
         "Distance (Map): " + distanceKM + " KM";
 
-      // 🔥 UPDATE PRICE IMMEDIATELY
       updatePrice();
 
     } else {
-      console.log("Map error:", status);
+      document.getElementById("distanceInfo").innerText =
+        "Map failed. Enter distance manually.";
     }
 
   });
-    function updatePrice() {
+}
+
+// ⚡ LIVE PRICE UPDATE
+function updatePrice() {
   const distance = Number(document.getElementById("distance").value) || 0;
   const weight = Number(document.getElementById("weight").value) || 0;
   const tip = Number(document.getElementById("Tip").value) || 0;
@@ -132,11 +120,9 @@ function getDistance() {
   document.getElementById("priceDisplay").innerText =
     "Estimated Price: " + price + " Birr";
 }
-    
-}
-}
 
-// Auto calculate distance when locations change
+// 🎯 EVENT LISTENERS
+
 document.getElementById("dropoff").addEventListener("change", () => {
   const pickup = document.getElementById("pickup").value;
   const dropoff = document.getElementById("dropoff").value;
@@ -146,7 +132,6 @@ document.getElementById("dropoff").addEventListener("change", () => {
   }
 });
 
-// Live price updates
 document.getElementById("distance").addEventListener("input", updatePrice);
 document.getElementById("weight").addEventListener("input", updatePrice);
 document.getElementById("Tip").addEventListener("input", updatePrice);
