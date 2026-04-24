@@ -45,13 +45,20 @@
 let map;
 
 function initMap() {
+  // Temporary center (required to render map)
   map = new google.maps.Map(document.getElementById("map"), {
-    zoom: 14
+    center: { lat: 0, lng: 0 }, // temporary
+    zoom: 2
   });
-
-  useMyLocation(); // auto detect user location
+  () => {
+  alert("Location blocked, showing default map");
+  map.setCenter({ lat: 9.03, lng: 38.74 }); // fallback if needed
 }
 
+  // Then move to user location
+  useMyLocation();
+  google.maps.event.trigger(map, "resize");
+}
 window.onload = initMap;
 </script>
 
