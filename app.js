@@ -13,6 +13,8 @@ function initMap() {
 
 // 📍 USE USER LOCATION
 function useMyLocation() {
+  console.log("Button clicked");
+  
   if (!navigator.geolocation) {
     alert("Geolocation not supported");
     return;
@@ -186,5 +188,7 @@ document.getElementById("dropoff").addEventListener("change", () => {
 
 document.getElementById("distance").addEventListener("input", updatePrice);
 document.getElementById("weight").addEventListener("input", updatePrice);
+
+window.useMyLocation = useMyLocation;
 document.getElementById("Tip").addEventListener("input", updatePrice);
 document.getElementById("Discount").addEventListener("input", updatePrice);
