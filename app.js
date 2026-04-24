@@ -13,22 +13,19 @@ function initMap() {
 
 // 📍 USE USER LOCATION
 function useMyLocation() {
-  console.log("Button clicked");
-  
-  if (!navigator.geolocation) {
-    alert("Geolocation not supported");
-    return;
-  }
+  alert("Button works");
 
   navigator.geolocation.getCurrentPosition(
-    position => 
+    (pos) => {
+      alert("SUCCESS");
 
-{
-      alert("Location works!");
+      console.log(pos.coords.latitude, pos.coords.longitude);
     },
-    error => {
-      alert("Error: " + error.message);
+    (err) => {
+      alert("FAILED: " + err.message);
     }
+  );
+}
 
 
       
