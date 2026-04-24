@@ -13,19 +13,9 @@ function initMap() {
 
 // 📍 USE USER LOCATION
 function useMyLocation() {
-  alert("Button works");
-
-  navigator.geolocation.getCurrentPosition(
-    (pos) => {
-      alert("SUCCESS");
-
-      console.log(pos.coords.latitude, pos.coords.longitude);
-    },
-    (err) => {
-      alert("FAILED: " + err.message);
-    }
-  );
+  alert("BUTTON CLICKED");
 }
+window.useMyLocation = useMyLocation;
 
 
       
