@@ -19,6 +19,38 @@ function useMyLocation() {
     return;
   }
 
+  navigator.geolocation.getCurrentPosition(
+    position => {
+      const lat = position.coords.latitude;
+      const lng = position.coords.longitude;
+
+      const userLocation = { lat, lng };
+
+      // Move map to user
+      map.setCenter(userLocation);
+
+      // Add marker
+      new google.maps.Marker({
+        position: userLocation,
+        map: map,
+        title: "Your Location"
+      });
+
+      // Convert to address
+      const geocoder = new google.maps.Geocoder();
+
+      geocoder.geocode({ location: userLocation }, (results, status) => {
+        if (status === "OK" && results[0]) {
+          document.getElementById("pickup").value = results[0].formatted_address;
+        }
+      });
+    },
+    () => {
+      alert("Please allow location access");
+    }
+  );
+}
+
   const dropoff = document.getElementById("dropoff").value;
 if (dropoff) {
   calculateDistanceFromMap(results[0].formatted_address, dropoff);
