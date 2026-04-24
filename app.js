@@ -13,6 +13,53 @@ function requestDelivery() {
     return;
   }
 
+function useMyLocation() {
+  if (!navigator.geolocation) {
+    alert("Geolocation not supported");
+    return;
+  }
+
+  const dropoff = document.getElementById("dropoff").value;
+if (dropoff) {
+  calculateDistanceFromMap(results[0].formatted_address, dropoff);
+}
+
+
+  navigator.geolocation.getCurrentPosition(
+    position => {
+      const lat = position.coords.latitude;
+      const lng = position.coords.longitude;
+
+      // Convert coordinates → address
+      const geocoder = new google.maps.Geocoder();
+
+      const latlng = { lat, lng };
+
+      geocoder.geocode({ location: latlng }, (results, status) => {
+        if (status === "OK" && results[0]) {
+          document.getElementById("pickup").value = results[0].formatted_address;
+        } else {
+          alert("Could not get address");
+        }
+      });
+
+      // Move map to user location
+      map.setCenter(latlng);
+
+      new google.maps.Marker({
+        position: latlng,
+        map: map,
+        title: "Your Location"
+      });
+
+    },
+    error => {
+      alert("Location access denied");
+    }
+  );
+}
+
+  
   const request = {
     id: Date.now(),
     pickup,
