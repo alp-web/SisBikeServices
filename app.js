@@ -21,20 +21,31 @@ function useMyLocation() {
   }
 
   navigator.geolocation.getCurrentPosition(
-    position => {
-      const lat = position.coords.latitude;
-      const lng = position.coords.longitude;
+    position => 
 
-      const userLocation = { lat, lng };
+{
+      alert("Location works!");
+    },
+    error => {
+      alert("Error: " + error.message);
+    }
 
-      map.setCenter(userLocation);
-      map.setZoom(14);
 
-      new google.maps.Marker({
-        position: userLocation,
-        map: map,
-        title: "Your Location"
-      });
+      
+      //{
+      //const lat = position.coords.latitude;
+      //const lng = position.coords.longitude;
+
+      //const userLocation = { lat, lng };
+
+      //map.setCenter(userLocation);
+      //map.setZoom(14);
+
+      //new google.maps.Marker({
+        //position: userLocation,
+        //map: map,
+        //title: "Your Location"
+      //});
 
       // Convert to address
       const geocoder = new google.maps.Geocoder();
