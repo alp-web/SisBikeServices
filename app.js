@@ -1,19 +1,21 @@
-let requests = [];
 let map;
+let requests = [];
 
 // 🚀 INIT MAP
 function initMap() {
-  map = new google.maps.Map(document.getElementById("map"), {
-    center: { lat: 0, lng: 0 },
-    zoom: 2
-  });
 
-  useMyLocation(); // optional auto locate
+  const mapDiv = document.getElementById("map");
+
+  map = new google.maps.Map(mapDiv, {
+    center: { lat: 9.03, lng: 38.74 },
+    zoom: 12
+  });
 }
 
-// 📍 USE MY LOCATION (FIXED)
+window.onload = initMap;
+
+// 📍 USE MY LOCATION
 function useMyLocation() {
-  alert("BUTTON CLICKED");
 
   if (!navigator.geolocation) {
     alert("Geolocation not supported");
@@ -22,12 +24,11 @@ function useMyLocation() {
 
   navigator.geolocation.getCurrentPosition(
     function (position) {
-      alert("LOCATION SUCCESS");
 
-      const lat = position.coords.latitude;
-      const lng = position.coords.longitude;
-
-      const userLocation = { lat, lng };
+      const userLocation = {
+        lat: position.coords.latitude,
+        lng: position.coords.longitude
+      };
 
       map.setCenter(userLocation);
       map.setZoom(15);
@@ -35,10 +36,10 @@ function useMyLocation() {
       new google.maps.Marker({
         position: userLocation,
         map: map,
-        title: "Your Location"
+        title: "You are here"
       });
 
-      // Convert to address
+      // Convert location to address
       const geocoder = new google.maps.Geocoder();
 
       geocoder.geocode({ location: userLocation }, function (results, status) {
@@ -47,16 +48,12 @@ function useMyLocation() {
             results[0].formatted_address;
         }
       });
+
     },
     function (error) {
-      alert("GPS ERROR: " + error.message);
+      alert("Location error: " + error.message);
 
       map.setCenter({ lat: 9.03, lng: 38.74 });
-      map.setZoom(12);
-    },
-    {
-      enableHighAccuracy: true,
-      timeout: 10000
     }
   );
 }
@@ -65,6 +62,7 @@ window.useMyLocation = useMyLocation;
 
 // 🗺️ DISTANCE CALCULATION
 function calculateDistanceFromMap(pickup, dropoff) {
+
   const service = new google.maps.DirectionsService();
 
   service.route(
@@ -74,29 +72,30 @@ function calculateDistanceFromMap(pickup, dropoff) {
       travelMode: "DRIVING"
     },
     function (result, status) {
-      if (status === "OK") {
-        const distanceMeters = result.routes[0].legs[0].distance.value;
-        const distanceKM = (distanceMeters / 1000).toFixed(1);
 
-        document.getElementById("distance").value = distanceKM;
+      if (status === "OK") {
+
+        const km = result.routes[0].legs[0].distance.value / 1000;
+
+        document.getElementById("distance").value = km.toFixed(1);
+
         document.getElementById("distanceInfo").innerText =
-          "Distance: " + distanceKM + " KM";
+          "Distance: " + km.toFixed(1) + " KM";
 
         updatePrice();
-      } else {
-        document.getElementById("distanceInfo").innerText =
-          "Could not calculate distance";
       }
     }
   );
 }
 
-// 💰 PRICE
-function calculatePrice(distanceKM, weight, tip, promo) {
-  let base = 50;
-  let total = base + distanceKM * 10 + weight * 5;
+// 💰 PRICE CALCULATION
+function calculatePrice(distance, weight, tip, promo) {
 
-  if (promo === "SAVE10") total *= 0.9;
+  let total = 50 + distance * 10 + weight * 5;
+
+  if (promo === "SAVE10") {
+    total *= 0.9;
+  }
 
   total += Number(tip || 0);
 
@@ -105,6 +104,7 @@ function calculatePrice(distanceKM, weight, tip, promo) {
 
 // ⚡ UPDATE PRICE
 function updatePrice() {
+
   const distance = Number(document.getElementById("distance").value) || 0;
   const weight = Number(document.getElementById("weight").value) || 0;
   const tip = Number(document.getElementById("Tip").value) || 0;
@@ -120,14 +120,14 @@ function updatePrice() {
 
 // 🚀 REQUEST DELIVERY
 function requestDelivery() {
+
   const pickup = document.getElementById("pickup").value;
   const dropoff = document.getElementById("dropoff").value;
   const distance = Number(document.getElementById("distance").value);
   const weight = Number(document.getElementById("weight").value);
-  const priceText = document.getElementById("priceDisplay").innerText;
 
   if (!pickup || !dropoff || !distance) {
-    alert("Complete all fields");
+    alert("Please fill all fields");
     return;
   }
 
@@ -137,26 +137,26 @@ function requestDelivery() {
     dropoff,
     distance,
     weight,
-    price: priceText,
     status: "Pending"
   });
 
   displayRequests();
 }
 
-// 📦 DISPLAY
+// 📦 DISPLAY REQUESTS
 function displayRequests() {
+
   const list = document.getElementById("requestsList");
   list.innerHTML = "";
 
   requests.forEach(req => {
+
     const li = document.createElement("li");
 
     li.innerHTML = `
-      ${req.pickup} → ${req.dropoff} <br>
-      Distance: ${req.distance} KM <br>
-      Weight: ${req.weight} kg <br>
-      ${req.price} <br>
+      ${req.pickup} → ${req.dropoff}<br>
+      Distance: ${req.distance} KM<br>
+      Weight: ${req.weight} kg<br>
       Status: ${req.status}
     `;
 
@@ -164,16 +164,11 @@ function displayRequests() {
   });
 }
 
-// 🚴 ACCEPT
-function acceptDelivery(id) {
-  const req = requests.find(r => r.id === id);
-  if (req) req.status = "In Progress";
-  displayRequests();
-}
-
-// EVENTS
+// 📍 AUTO DISTANCE ON DROP-OFF CHANGE
 document.addEventListener("DOMContentLoaded", () => {
+
   document.getElementById("dropoff").addEventListener("change", () => {
+
     const pickup = document.getElementById("pickup").value;
     const dropoff = document.getElementById("dropoff").value;
 
