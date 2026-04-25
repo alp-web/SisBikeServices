@@ -1,53 +1,31 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Sis Bike Delivery</title>
-  <link rel="stylesheet" href="style.css">
+  <title>Map Test</title>
+  <style>
+    #map {
+      width: 100%;
+      height: 400px;
+      background: red;
+    }
+  </style>
 </head>
 
 <body>
 
-<div class="container">
+<h2>Map Test</h2>
+<div id="map"></div>
 
-  <h1>🚴 Sis Delivery Service</h1>
-  <h1>ሲስ የዴሊቨሪ አገልግሎት</h1>
+<script>
+function initMap() {
+  new google.maps.Map(document.getElementById("map"), {
+    center: { lat: 9.03, lng: 38.74 },
+    zoom: 12
+  });
+}
+</script>
 
-  <!-- MAP -->
-  <div id="map"></div>
-
-  <div class="form">
-
-    <input type="text" id="pickup" placeholder="Pickup Location">
-
-    <button type="button" onclick="useMyLocation()">
-      Use My Location 📍
-    </button>
-
-    <input type="text" id="dropoff" placeholder="Drop-off Location">
-
-    <input type="number" id="distance" placeholder="Distance (KM)">
-    <p id="distanceInfo">Distance: Not calculated</p>
-
-    <input type="number" id="weight" placeholder="Item Weight (kg)">
-
-    <p id="priceDisplay">Estimated Price: 0 Birr</p>
-
-    <input type="number" id="Tip" placeholder="Tip">
-    <input type="text" id="Discount" placeholder="Promo Code">
-
-    <button onclick="requestDelivery()">Request Delivery</button>
-
-  </div>
-
-  <h2>Delivery Requests</h2>
-  <ul id="requestsList"></ul>
-
-</div>
-
-<!-- Google Maps API (IMPORTANT) -->
 <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAdxzIx6p5vrkaMyQPEV5-NafiB162revs&libraries=places"></script>
-<!-- JS FILE -->
-<script src="app.js"></script>
 
 </body>
 </html>
