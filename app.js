@@ -1,16 +1,59 @@
 let map;
+let pickupMarker = null;
+let dropoffMarker = null;
+let directionsService;
+let directionsRenderer;
+let selectMode = "pickup";
 
 // 🚀 INIT GOOGLE MAP (called by callback=initMap)
 function initMap() {
 
   map = new google.maps.Map(document.getElementById("map"), {
-    center: { lat: 9.03, lng: 38.74 }, // default: Addis Ababa
+    center: { lat: 9.03, lng: 38.74 },
     zoom: 12
   });
 
- directionsService = new google.maps.DirectionsService();
+  directionsService = new google.maps.DirectionsService();
   directionsRenderer = new google.maps.DirectionsRenderer();
-directionsRenderer.setMap(map);
+  directionsRenderer.setMap(map);
+
+  // CLICK MAP → PICK LOCATION
+  map.addListener("click", function (event) {
+
+    const pos = event.latLng;
+
+    if (selectMode === "pickup") {
+
+      if (pickupMarker) pickupMarker.setMap(null);
+
+      pickupMarker = new google.maps.Marker({
+        position: pos,
+        map: map,
+        label: "P"
+      });
+
+      document.getElementById("pickup").value = pos.lat() + ", " + pos.lng();
+
+    } else {
+
+      if (dropoffMarker) dropoffMarker.setMap(null);
+
+      dropoffMarker = new google.maps.Marker({
+        position: pos,
+        map: map,
+        label: "D"
+      });
+
+      document.getElementById("ropoff").value = pos.lat() + ", " + pos.lng();
+      
+    }
+
+    // draw route if both exist
+    if (pickupMarker && dropoffMarker) {
+      drawRoute();
+    }
+  });
+}
 
 // CLICK ON MAP → SET LOCATION
   map.addListener("click", function (event) {
@@ -95,7 +138,40 @@ function useMyLocation() {
     alert("Geolocation not supported");
     return;
   }
+function setPickupMode() {
+  selectMode = "pickup";
+  alert("Click map to select PICKUP");
+}
+  function drawRoute() {
 
+  directionsService.route(
+    {
+      origin: pickupMarker.getPosition(),
+      destination: dropoffMarker.getPosition(),
+      travelMode: "DRIVING"
+    },
+    function (result, status) {
+
+      if (status === "OK") {
+
+        directionsRenderer.setDirections(result);
+
+        const distanceMeters = result.routes[0].legs[0].distance.value;
+        const distanceKM = (distanceMeters / 1000).toFixed(1);
+
+        alert("Distance: " + distanceKM + " KM");
+
+      } else {
+        alert("Route failed: " + status);
+      }
+    }
+  );
+}
+
+function setDropoffMode() {
+  selectMode = "dropoff";
+  alert("Click map to select DROPOFF");
+}
   navigator.geolocation.getCurrentPosition(
     function (position) {
 
