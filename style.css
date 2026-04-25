@@ -15,12 +15,15 @@ h1 {
   color: #2c3e50;
 }
 
-.hero {
+/* MAP */
+#map {
   width: 100%;
-  border-radius: 10px;
+  height: 300px;
   margin: 15px 0;
+  border-radius: 10px;
 }
 
+/* FORM BOX */
 .form {
   background: white;
   padding: 15px;
@@ -28,6 +31,7 @@ h1 {
   box-shadow: 0 2px 5px rgba(0,0,0,0.1);
 }
 
+/* INPUTS */
 input {
   width: 90%;
   padding: 10px;
@@ -36,6 +40,7 @@ input {
   border-radius: 5px;
 }
 
+/* BUTTONS */
 button {
   width: 95%;
   padding: 12px;
@@ -44,28 +49,17 @@ button {
   border: none;
   border-radius: 5px;
   font-size: 16px;
+  cursor: pointer;
 }
 
 button:hover {
   background: #1e8449;
 }
 
+/* DELIVERY LIST */
 li {
   background: white;
   margin: 10px 0;
   padding: 10px;
   border-radius: 8px;
-}
-#map {
-  width: 100%;
-  height: 300px;
-  margin-top: 15px;
-  border-radius: 10px;
-}
-
-#map {
-  width: 100%;
-  height: 300px;
-  margin-bottom: 15px;
-  border-radius: 10px;
 }
