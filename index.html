@@ -1,66 +1,53 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Map Test</title>
-  <style>
-    #map {
-      width: 100%;
-      height: 400px;
-      background: red;
-    }
-  </style>
+  <title>Sis Bike Delivery</title>
+  <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
 
-<h2>Map Test</h2>
-<div id="map"></div>
+<div class="container">
+
+  <h1>🚴 Sis Delivery Service</h1>
+  <h1>ሲስ የዴሊቨሪ አገልግሎት</h1>
+
+  <!-- MAP -->
+  <div id="map"></div>
+
+  <!-- MAP CONTROLS -->
   <button onclick="useMyLocation()">Use My Location 📍</button>
-  <button onclick="setPickupMode()">Select Pickup 📍</button>
-<button onclick="setDropoffMode()">Select Dropoff 📍</button>
+  <button onclick="setPickupMode()">Select Pickup</button>
+  <button onclick="setDropoffMode()">Select Dropoff</button>
 
-<script>
-let map;
+  <div class="form">
 
-function initMap() {
-  map = new google.maps.Map(document.getElementById("map"), {
-    center: { lat: 9.03, lng: 38.74 },
-    zoom: 12
-  });
-}
+    <input type="text" id="pickup" placeholder="Pickup Location">
+    <input type="text" id="dropoff" placeholder="Drop-off Location">
 
-// ✅ NEW FUNCTION (THIS IS WHAT YOU ARE MISSING)
-function useMyLocation() {
+    <input type="number" id="distance" placeholder="Distance (KM)" readonly>
 
-  if (!navigator.geolocation) {
-    alert("Geolocation not supported");
-    return;
-  }
+    <input type="number" id="weight" placeholder="Weight (kg)" min="1">
 
-  navigator.geolocation.getCurrentPosition(
-    function (position) {
+    <input type="number" id="Tip" placeholder="Tip">
 
-      const userLocation = {
-        lat: position.coords.latitude,
-        lng: position.coords.longitude
-      };
+    <input type="text" id="Discount" placeholder="Promo Code">
 
-      map.setCenter(userLocation);
-      map.setZoom(15);
+    <p id="priceDisplay">Estimated Price: 0 Birr</p>
 
-      new google.maps.Marker({
-        position: userLocation,
-        map: map
-      });
+    <button onclick="requestDelivery()">Request Delivery</button>
 
-    },
-    function (error) {
-      alert("GPS error: " + error.message);
-    }
-  );
-}
-</script>
+  </div>
 
-<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAdxzIx6p5vrkaMyQPEV5-NafiB162revs&callback=initMap" async defer></script>
+  <h2>Delivery Requests</h2>
+  <ul id="requestsList"></ul>
+
+</div>
+
+<!-- GOOGLE MAPS -->
+<script src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&callback=initMap" async defer></script>
+
+<script src="app.js"></script>
+
 </body>
 </html>
