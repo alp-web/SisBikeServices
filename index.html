@@ -12,13 +12,18 @@
   <h1>🚴 Sis Delivery Service</h1>
   <h1>ሲስ የዴሊቨሪ አገልግሎት</h1>
 
-  <!-- Map -->
+  <!-- MAP -->
   <div id="map"></div>
 
   <div class="form">
-    <input type="text" id="pickup" placeholder="Pickup Location (መነሻ ቦታ)">
-    <button type="button" onclick="useMyLocation()">Use My Location 📍</button>
-    <input type="text" id="dropoff" placeholder="Drop-off Location (መድረሻ ቦታ)">
+
+    <input type="text" id="pickup" placeholder="Pickup Location">
+
+    <button type="button" onclick="useMyLocation()">
+      Use My Location 📍
+    </button>
+
+    <input type="text" id="dropoff" placeholder="Drop-off Location">
 
     <input type="number" id="distance" placeholder="Distance (KM)" min="1" step="1">
     <p id="distanceInfo">Distance: Not calculated</p>
@@ -31,38 +36,18 @@
     <input type="text" id="Discount" placeholder="Promo Code">
 
     <button onclick="requestDelivery()">Request Delivery</button>
+
   </div>
 
-  <h2>ደሊቨሪ ይዘዙ (Delivery Requests)</h2>
+  <h2>Delivery Requests</h2>
   <ul id="requestsList"></ul>
 
 </div>
 
-<!-- ✅ CORRECT SCRIPT -->
+<!-- GOOGLE MAPS -->
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAdxzIx6p5vrkaMyQPEV5-NafiB162revs&libraries=places"></script>
 
-  <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAdxzIx6p5vrkaMyQPEV5-NafiB162revs&libraries=places"></script>
-
-<script>
-let map;
-
-function initMap() {
-  // Temporary center (required to render map)
-  map = new google.maps.Map(document.getElementById("map"), {
-    center: { lat: 0, lng: 0 }, // temporary
-    zoom: 2
-  });
-  () => {
-  alert("Location blocked, showing default map");
-  map.setCenter({ lat: 9.03, lng: 38.74 }); // fallback if needed
-}
-
-  // Then move to user location
-  useMyLocation();
-  google.maps.event.trigger(map, "resize");
-}
-window.onload = initMap;
-</script>
-
+<!-- APP JS -->
 <script src="app.js"></script>
 
 </body>
