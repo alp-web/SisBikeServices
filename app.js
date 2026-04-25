@@ -1,3 +1,4 @@
+
 let map;
 let pickupMarker = null;
 let dropoffMarker = null;
@@ -5,7 +6,9 @@ let directionsService;
 let directionsRenderer;
 let selectMode = "pickup";
 
-// 🚀 INIT GOOGLE MAP (called by callback=initMap)
+let requests = [];
+
+// 🚀 INIT MAP
 function initMap() {
 
   map = new google.maps.Map(document.getElementById("map"), {
@@ -17,7 +20,6 @@ function initMap() {
   directionsRenderer = new google.maps.DirectionsRenderer();
   directionsRenderer.setMap(map);
 
-  // CLICK MAP → PICK LOCATION
   map.addListener("click", function (event) {
 
     const pos = event.latLng;
@@ -32,7 +34,8 @@ function initMap() {
         label: "P"
       });
 
-      document.getElementById("pickup").value = pos.lat() + ", " + pos.lng();
+      document.getElementById("pickup").value =
+        pos.lat().toFixed(5) + "," + pos.lng().toFixed(5);
 
     } else {
 
@@ -44,195 +47,135 @@ function initMap() {
         label: "D"
       });
 
-      document.getElementById("ropoff").value = pos.lat() + ", " + pos.lng();
-      
-    }
-
-    // draw route if both exist
-    if (pickupMarker && dropoffMarker) {
-      drawRoute();
-    }
-  });
-}
-
-// CLICK ON MAP → SET LOCATION
-  map.addListener("click", function (event) {
-
-    const clickedLocation = event.latLng;
-
-    if (selectMode === "pickup") {
-
-      if (pickupMarker) pickupMarker.setMap(null);
-
-      pickupMarker = new google.maps.Marker({
-        position: clickedLocation,
-        map: map,
-        label: "P"
-      });
-
-      document.getElementById("pickup").value =
-        clickedLocation.lat() + ", " + clickedLocation.lng();
-
-    } else {
-
-      if (dropoffMarker) dropoffMarker.setMap(null);
-
-      dropoffMarker = new google.maps.Marker({
-        position: clickedLocation,
-        map: map,
-        label: "D"
-      });
-
       document.getElementById("dropoff").value =
-        clickedLocation.lat() + ", " + clickedLocation.lng();
+        pos.lat().toFixed(5) + "," + pos.lng().toFixed(5);
     }
 
-    // If both exist → draw route
     if (pickupMarker && dropoffMarker) {
       drawRoute();
     }
   });
 }
 
-function drawRoute() {
-
-  directionsService.route(
-    {
-      origin: pickupMarker.getPosition(),
-      destination: dropoffMarker.getPosition(),
-      travelMode: "DRIVING"
-    },
-    function (result, status) {
-
-      if (status === "OK") {
-
-        directionsRenderer.setDirections(result);
-
-        const distanceMeters = result.routes[0].legs[0].distance.value;
-        const distanceKM = (distanceMeters / 1000).toFixed(1);
-
-        document.getElementById("distance").value = distanceKM;
-
-        console.log("Distance:", distanceKM, "KM");
-
-      } else {
-        alert("Route failed: " + status);
-      }
-    }
-  );
-}
-function setPickupMode() {
-  selectMode = "pickup";
-  alert("Click map to select PICKUP location");
-}
-
-function setDropoffMode() {
-  selectMode = "dropoff";
-  alert("Click map to select DROPOFF location");
-}
-
-// 📍 USE MY LOCATION (FIXED + MOBILE READY)
+// 📍 GPS LOCATION
 function useMyLocation() {
 
-  if (!navigator.geolocation) {
-    alert("Geolocation not supported");
-    return;
-  }
+  navigator.geolocation.getCurrentPosition(function (pos) {
+
+    const user = {
+      lat: pos.coords.latitude,
+      lng: pos.coords.longitude
+    };
+
+    map.setCenter(user);
+    map.setZoom(15);
+
+    new google.maps.Marker({
+      position: user,
+      map: map
+    });
+
+  });
+}
+
+// 🟢 MODE SWITCH
 function setPickupMode() {
   selectMode = "pickup";
-  alert("Click map to select PICKUP");
-}
-  function drawRoute() {
-
-  directionsService.route(
-    {
-      origin: pickupMarker.getPosition(),
-      destination: dropoffMarker.getPosition(),
-      travelMode: "DRIVING"
-    },
-    function (result, status) {
-
-      if (status === "OK") {
-
-        directionsRenderer.setDirections(result);
-
-        const distanceMeters = result.routes[0].legs[0].distance.value;
-        const distanceKM = (distanceMeters / 1000).toFixed(1);
-
-        alert("Distance: " + distanceKM + " KM");
-
-      } else {
-        alert("Route failed: " + status);
-      }
-    }
-  );
+  alert("Click map for PICKUP");
 }
 
 function setDropoffMode() {
   selectMode = "dropoff";
-  alert("Click map to select DROPOFF");
+  alert("Click map for DROPOFF");
 }
-  navigator.geolocation.getCurrentPosition(
-    function (position) {
 
-      const userLocation = {
-        lat: position.coords.latitude,
-        lng: position.coords.longitude
-      };
+// 🛣️ ROUTE + DISTANCE
+function drawRoute() {
 
-      // Move map
-      map.setCenter(userLocation);
-      map.setZoom(16);
+  directionsService.route({
+    origin: pickupMarker.getPosition(),
+    destination: dropoffMarker.getPosition(),
+    travelMode: "DRIVING"
+  }, function (result, status) {
 
-      // Marker
-      new google.maps.Marker({
-        position: userLocation,
-        map: map,
-        title: "Your Location"
-      });
+    if (status === "OK") {
 
-      console.log("GPS SUCCESS:", userLocation);
+      directionsRenderer.setDirections(result);
 
-    },
-    function (error) {
+      let distanceKM =
+        (result.routes[0].legs[0].distance.value / 1000).toFixed(1);
 
-      console.log("GPS ERROR:", error);
+      document.getElementById("distance").value = distanceKM;
 
-      // Better error messages
-      switch (error.code) {
-        case 1:
-          alert("Location permission denied. Please allow location.");
-          break;
-        case 2:
-          alert("Location unavailable.");
-          break;
-        case 3:
-          alert("Location request timed out.");
-          break;
-        default:
-          alert("Unknown GPS error.");
-      }
+      updatePrice();
 
-      // fallback map position
-      map.setCenter({ lat: 9.03, lng: 38.74 });
-      map.setZoom(12);
-    },
-    {
-      enableHighAccuracy: true,
-      timeout: 10000,
-      maximumAge: 0
     }
-  );
+  });
 }
 
-// Make function available to HTML button
+// 💰 PRICE
+function calculatePrice(distance, weight, tip, promo) {
+
+  let price = 50 + (distance * 10) + (weight * 5);
+
+  if (promo === "SAVE10") price *= 0.9;
+
+  price += Number(tip || 0);
+
+  return Math.round(price);
+}
+
+// ⚡ UPDATE PRICE
+function updatePrice() {
+
+  let d = Number(document.getElementById("distance").value || 0);
+  let w = Number(document.getElementById("weight").value || 0);
+  let t = Number(document.getElementById("Tip").value || 0);
+  let p = document.getElementById("Discount").value;
+
+  document.getElementById("priceDisplay").innerText =
+    "Estimated Price: " + calculatePrice(d, w, t, p) + " Birr";
+}
+
+// 🚚 REQUEST DELIVERY
+function requestDelivery() {
+
+  let req = {
+    id: Date.now(),
+    pickup: document.getElementById("pickup").value,
+    dropoff: document.getElementById("dropoff").value,
+    distance: document.getElementById("distance").value,
+    price: document.getElementById("priceDisplay").innerText,
+    status: "Pending"
+  };
+
+  requests.push(req);
+  displayRequests();
+}
+
+// 📦 SHOW REQUESTS
+function displayRequests() {
+
+  let list = document.getElementById("requestsList");
+  list.innerHTML = "";
+
+  requests.forEach(r => {
+
+    let li = document.createElement("li");
+
+    li.innerHTML =
+      r.pickup + " → " + r.dropoff + "<br>" +
+      "Distance: " + r.distance + " KM<br>" +
+      r.price + "<br>" +
+      "Status: " + r.status;
+
+    list.appendChild(li);
+  });
+}
+
+// expose
+window.initMap = initMap;
 window.useMyLocation = useMyLocation;
-
-let map;
-let pickupMarker = null;
-let dropoffMarker = null;
-let directionsService;
-let directionsRenderer;
-let selectMode = "pickup"; // default mode
-
-
+window.setPickupMode = setPickupMode;
+window.setDropoffMode = setDropoffMode;
+window.requestDelivery = requestDelivery;
