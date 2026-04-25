@@ -11,11 +11,15 @@ let requests = [];
 // 🚀 INIT MAP
 function initMap() {
 
+  console.log("initMap running");
+
   map = new google.maps.Map(document.getElementById("map"), {
     center: { lat: 9.03, lng: 38.74 },
     zoom: 12
   });
 
+}
+window.initMap = initMap;
   directionsService = new google.maps.DirectionsService();
   directionsRenderer = new google.maps.DirectionsRenderer();
   directionsRenderer.setMap(map);
