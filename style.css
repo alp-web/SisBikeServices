@@ -1,7 +1,7 @@
 body {
   font-family: Arial, sans-serif;
-  background: #f4f6f8;
   margin: 0;
+  background: #f4f6f8;
 }
 
 .container {
@@ -15,15 +15,15 @@ h1 {
   color: #2c3e50;
 }
 
-/* MAP */
+/* MAP FIX (IMPORTANT) */
 #map {
   width: 100%;
   height: 300px;
-  margin: 15px 0;
+  margin-bottom: 15px;
   border-radius: 10px;
+  background: #ddd;
 }
 
-/* FORM BOX */
 .form {
   background: white;
   padding: 15px;
@@ -31,7 +31,6 @@ h1 {
   box-shadow: 0 2px 5px rgba(0,0,0,0.1);
 }
 
-/* INPUTS */
 input {
   width: 90%;
   padding: 10px;
@@ -40,7 +39,6 @@ input {
   border-radius: 5px;
 }
 
-/* BUTTONS */
 button {
   width: 95%;
   padding: 12px;
@@ -48,15 +46,12 @@ button {
   color: white;
   border: none;
   border-radius: 5px;
-  font-size: 16px;
-  cursor: pointer;
 }
 
 button:hover {
   background: #1e8449;
 }
 
-/* DELIVERY LIST */
 li {
   background: white;
   margin: 10px 0;
