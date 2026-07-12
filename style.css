@@ -17,11 +17,12 @@ body {
 /* HEADER SECTION */
 
 .hero {
-  background: linear-gradient(
-    rgba(0,0,0,0.45),
-    rgba(0,0,0,0.45)
-  ),
-  url("https://github.com/alp-web/SisBikeServices/blob/main/bike-delivery.jpg");
+  background:
+    linear-gradient(
+      rgba(0,0,0,0.45),
+      rgba(0,0,0,0.45)
+    ),
+    url("bike-delivery.jpg");
 
   background-size: cover;
   background-position: center;
@@ -29,7 +30,6 @@ body {
   color: white;
   padding: 60px 20px;
   border-radius: 20px;
-  margin-bottom: 25px;
 }
 
 
