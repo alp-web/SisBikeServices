@@ -9,45 +9,132 @@
 
 <div class="container">
 
-  <h1>🚴 Micky Fast Delivery Service</h1>
-  <h1>ሚኪ ፈጣን የዴሊቨሪ አገልግሎት</h1>
+  <!-- HEADER -->
+  <header class="hero">
+    <h1>🚴 Micky Fast Delivery Service</h1>
+    <h2>ሚኪ ፈጣን የዴሊቨሪ አገልግሎት</h2>
 
-  <!-- MAP -->
-  <div id="map"></div>
+    <p>
+      Fast, reliable, and affordable bike delivery service.
+      <br>
+      Your package delivered safely to your destination.
+    </p>
+  </header>
 
-  <!-- MAP CONTROLS -->
-  <button onclick="useMyLocation()">Use My Location 📍</button>
-  <button onclick="setPickupMode()">Select Pickup</button>
-  <button onclick="setDropoffMode()">Select Dropoff</button>
 
-  <div class="form">
+  <!-- FEATURES -->
+  <section class="features">
 
-    <input type="text" id="pickup" placeholder="Pickup Location">
-    <input type="text" id="dropoff" placeholder="Drop-off Location">
+    <div class="card">
+      🚴
+      <h3>Fast Delivery</h3>
+      <p>Quick transportation using bicycles.</p>
+    </div>
 
-    <input type="number" id="distance" placeholder="Distance (KM)" readonly>
+    <div class="card">
+      📍
+      <h3>Live Location</h3>
+      <p>Select pickup and drop-off locations.</p>
+    </div>
 
-    <input type="number" id="weight" placeholder="Weight (kg)" min="1">
+    <div class="card">
+      📦
+      <h3>Safe Delivery</h3>
+      <p>Your package handled carefully.</p>
+    </div>
 
-    <input type="number" id="Tip" placeholder="Tip">
+  </section>
 
-    <input type="text" id="Discount" placeholder="Promo Code">
 
-    <p id="priceDisplay">Estimated Price: 0 Birr</p>
+  <!-- MAP SECTION -->
+  <section class="map-section">
 
-    <button onclick="requestDelivery()">Request Delivery</button>
+    <h2>Select Delivery Route</h2>
 
-  </div>
+    <div id="map"></div>
 
-  <h2>Delivery Requests</h2>
-  <ul id="requestsList"></ul>
+
+    <!-- MAP CONTROLS -->
+    <div class="buttons">
+
+      <button onclick="useMyLocation()">
+        Use My Location 📍
+      </button>
+
+      <button onclick="setPickupMode()">
+        Select Pickup
+      </button>
+
+      <button onclick="setDropoffMode()">
+        Select Dropoff
+      </button>
+
+    </div>
+
+  </section>
+
+
+
+  <!-- DELIVERY FORM -->
+  <section class="form-section">
+
+    <h2>Request Delivery</h2>
+
+    <div class="form">
+
+      <input type="text" id="pickup" placeholder="Pickup Location">
+
+      <input type="text" id="dropoff" placeholder="Drop-off Location">
+
+      <input type="number" id="distance" placeholder="Distance (KM)" readonly>
+
+      <input type="number" id="weight" placeholder="Weight (kg)" min="1">
+
+      <input type="number" id="Tip" placeholder="Tip">
+
+      <input type="text" id="Discount" placeholder="Promo Code">
+
+
+      <p id="priceDisplay">
+        Estimated Price: 0 Birr
+      </p>
+
+
+      <button onclick="requestDelivery()">
+        Request Delivery 🚴
+      </button>
+
+    </div>
+
+  </section>
+
+
+
+  <!-- REQUEST LIST -->
+  <section>
+
+    <h2>Delivery Requests</h2>
+
+    <ul id="requestsList"></ul>
+
+  </section>
+
+
+  <footer>
+    <p>
+      © 2026 Micky Fast Delivery Service
+    </p>
+  </footer>
+
 
 </div>
+
 
 <!-- GOOGLE MAPS -->
 <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAdxzIx6p5vrkaMyQPEV5-NafiB162revs&callback=initMap" async defer></script>
 
 <script src="app.js"></script>
+
 
 </body>
 </html>
